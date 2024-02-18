@@ -2,10 +2,6 @@ import re
 
 
 def change_copy_item(title: str, max_main_item_title_length: int = 100) -> str:
-    """
-    Возвращает измененное название объекта с увеличенной цифрой копии
-    или с добавленной цифрой "2" в случае отсутствия номера копии.
-    """
 
     additional_copy_text: str = 'Copy of'
     title_with_additional_copy_text: str = f'{additional_copy_text} {title}'
