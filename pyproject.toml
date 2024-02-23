@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "testing-exercises"
+version = "0.1.0"
+description = ""
+authors = ["Octopulus96 <octopulus96@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.6"
+pytest = "7.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

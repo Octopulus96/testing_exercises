@@ -2,6 +2,7 @@ import re
 
 
 def change_copy_item(title: str, max_main_item_title_length: int = 100) -> str:
+
     additional_copy_text: str = 'Copy of'
     title_with_additional_copy_text: str = f'{additional_copy_text} {title}'
 
