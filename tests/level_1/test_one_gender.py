@@ -1,7 +1,11 @@
 from functions.level_1.one_gender import genderalize
 
 
-def test_genderalize():
-    assert genderalize("run", "walk", "male") == "run"
-    assert genderalize("run", "walk", "female") == "walk"
-    assert genderalize("jump", "swim", "other") == "swim"
+def test_generalize_return_male_verb_for_male_gender():
+    assert genderalize("ходил", "ходила", "male") == "ходил"
+
+def test_generalize_return_female_verb_for_female_gender():
+    assert genderalize("ходил", "ходила", "female") == "ходила"
+
+def test__genderalize__return_female_verb_for_unknown_gender():
+    assert genderalize("ходил", "ходила", "other") == "ходила"
