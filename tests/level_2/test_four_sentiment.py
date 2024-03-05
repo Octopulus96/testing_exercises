@@ -52,3 +52,27 @@ def test__check_tweet_sentiment__there_is_an_equal_balance_of_bad_and_good_words
                                    good_words=sample_text_data["good_words"],
                                    bad_words=sample_text_data["bad_words"])    
     assert result == None
+
+def test__check_tweet_sentiment__returns_None_if_type_of_word_list_arguments_are_iterable_set(sample_text_data):
+    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
+                                   good_words={},
+                                   bad_words=())
+    assert result == None
+
+def test__check_tweet_sentiment__сauses_a_TypeError_exception_if_bad_words_is_not_an_iterated_number(sample_text_data):
+    with pytest.raises(TypeError):
+        check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
+                              good_words=sample_text_data["good_words"],
+                              bad_words=1)
+        
+def test__check_tweet_sentiment__сauses_a_TypeError_exception_if_good_words_is_not_an_iterated_number(sample_text_data):
+    with pytest.raises(TypeError):
+        check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
+                              good_words=1,
+                              bad_words=sample_text_data["bad_words"])
+
+def test__check_tweet_sentiment__if_the_argument_text_not_str_raises_an_AttributeError_exception(sample_text_data):
+    with pytest.raises(AttributeError):
+        check_tweet_sentiment(text=1,
+                              good_words=sample_text_data["good_words"],
+                              bad_words=sample_text_data["bad_words"])
