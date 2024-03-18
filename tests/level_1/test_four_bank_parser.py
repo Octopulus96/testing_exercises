@@ -29,19 +29,19 @@ def sample_sms_message():
         )
     ]
 
-def test_parse_ineco_expense_amount(sample_sms_message, sample_cards):
+def test__parse_ineco_expense__amount_method_returns_the_transaction_amount_from_sms_cutting_off_the_small_dignity(sample_sms_message, sample_cards):
     summary = parse_ineco_expense(sms=sample_sms_message[0], cards=sample_cards)
     assert summary.amount == 1234567
 
-def test_parse_ineco_expense_card(sample_sms_message, sample_cards):
+def test__parse_ineco_expense__card_method_finds_the_last_4_digits_of_the_card_from_the_sms_in_the_list_of_existing_cards(sample_sms_message, sample_cards):
     summary = parse_ineco_expense(sms=sample_sms_message[0], cards=sample_cards)
     assert summary.card == sample_cards[0]
 
-def test_parse_ineco_expense_spent_in(sample_sms_message, sample_cards):
+def test__parse_ineco_expense__spent_in_method_returns_additional_information_from_the_end_of_the_sms(sample_sms_message, sample_cards):
     summary = parse_ineco_expense(sms=sample_sms_message[0], cards=sample_cards)
     assert summary.spent_in == "Moscow some_details"
 
-def test_parse_ineco_expense_spent_at(sample_sms_message, sample_cards):
+def test__parse_ineco_expense__method_spent_at_gets_date_from_sms_and_converts_it_to_datetime(sample_sms_message, sample_cards):
     summary = parse_ineco_expense(sms=sample_sms_message[0], cards=sample_cards) 
     assert summary.spent_at == datetime.datetime(2023, 4, 1, 15, 30)
 

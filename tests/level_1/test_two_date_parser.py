@@ -1,20 +1,40 @@
+import pytest
 import datetime
-from freezegun import freeze_time
 
 from functions.level_1.two_date_parser import compose_datetime_from
 
-@freeze_time("2024-02-23 12:00:00")
-def test_compose_datetime_from_today_12_00():
-    assert compose_datetime_from("today", "12:00") == datetime.datetime.now()
+@pytest.fixture
+def test_data():
+    return {
+        "today": "today",
+        "tomorrow": "tomorrow",
+        "today_date": datetime.date.today(),
+        "tommorow_date": datetime.date.today() + datetime.timedelta(days=1),
+        "time": "12:30",
+        "expected_today_hour": 12,
+        "expected_today_minute": 30,
+    }
 
-@freeze_time("2024-02-23 12:00:00")
-def test_compose_datetime_from_tomorrow_12_00():
-    assert compose_datetime_from("tomorrow", "12:00") == datetime.datetime.now() + datetime.timedelta(days=1)
+def test__compose_datetime_from__pass_tommorow_the_date_changes_to_tomorrow(test_data):
+    result = compose_datetime_from(test_data["tomorrow"], test_data["time"])
+    assert result.date() == test_data["tommorow_date"]
 
-@freeze_time("2024-02-23 21:30:00")
-def test_compose_datetime_from_today_21_30():
-    assert compose_datetime_from("today", "21:30") == datetime.datetime.now()
+def test__compose_datetime_from__pass_tommorow_hours_does_not_change(test_data):
+    result = compose_datetime_from(test_data["tomorrow"], test_data["time"])
+    assert result.hour == test_data["expected_today_hour"]
 
-@freeze_time("2024-02-23 21:30:00")
-def test_compose_datetime_from_tomorrow_21_30():
-    assert compose_datetime_from("tomorrow", "21:30") == datetime.datetime.now() + datetime.timedelta(days=1)
+def test__compose_datetime_from__pass_tommorow_minites_does_not_change(test_data):
+    result = compose_datetime_from(test_data["tomorrow"], test_data["time"])
+    assert result.minute == test_data["expected_today_minute"]
+
+def test__compose_datetime_from__pass_today_date_does_not_change(test_data):
+    result = compose_datetime_from(test_data["today"], test_data["time"])  
+    assert result.date() == test_data["today_date"]
+
+def test__compose_datetime_from__pass_today_hours_does_not_change(test_data):
+    result = compose_datetime_from(test_data["today"], test_data["time"])  
+    assert result.hour == test_data["expected_today_hour"]
+
+def test__compose_datetime_from__pass_today_minites_does_not_change(test_data):
+    result = compose_datetime_from(test_data["today"], test_data["time"])    
+    assert result.minute == test_data["expected_today_minute"]
