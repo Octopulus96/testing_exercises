@@ -1,0 +1,3 @@
+[run]
+source = functions
+omit = __init__.py

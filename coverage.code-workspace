@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		"coverage-gutters.showLineCoverage": true,
-		"coverage-gutters.coverageReportFileName": "index.html",
+		"coverage-gutters.coverageReportFileName": "cov.xml",
 		"coverage-gutters.remotePathResolve": ["/var/www/", "./"]
 	}
 }
