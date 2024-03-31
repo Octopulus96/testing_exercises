@@ -15,4 +15,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--cov=testing_exercises --cov-report xml:cov.xml"
+addopts = "--cov=. --cov-report=xml:cov.xml"
