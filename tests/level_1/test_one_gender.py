@@ -1,11 +1,10 @@
+import pytest
 from functions.level_1.one_gender import genderalize
 
-
-def test__generalize__return_male_verb_for_male_gender():
-    assert genderalize("ходил", "ходила", "male") == "ходил"
-
-def test__generalize__return_female_verb_for_female_gender():
-    assert genderalize("ходил", "ходила", "female") == "ходила"
-
-def test__genderalize__return_female_verb_for_unknown_gender():
-    assert genderalize("ходил", "ходила", "other") == "ходила"
+@pytest.mark.parametrize("masculine,feminine,gender,expected", [
+    pytest.param("ходил", "ходила", "male", "ходил", id="return_male_verb_for_male_gender"),
+    pytest.param("ходил", "ходила", "female", "ходила", id="return_female_verb_for_female_gender"),
+    pytest.param("ходил", "ходила", "other", "ходила", id="return_female_verb_for_other_gender"),
+])
+def test__genderalize__recognise_gender_based_on_sex(masculine, feminine, gender, expected):
+    assert genderalize(masculine, feminine, gender) == expected
