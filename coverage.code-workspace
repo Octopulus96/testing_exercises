@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "function"
+		}
+	],
+	"settings": {
+		"coverage-gutters.showGutterCoverage": false,
+		"coverage-gutters.showLineCoverage": true,
+		"coverage-gutters.coverageReportFileName": "cov.xml"
+	}
+}

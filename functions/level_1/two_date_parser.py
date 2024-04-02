@@ -14,5 +14,3 @@ def compose_datetime_from(date_str: str, time_str: str) -> datetime.datetime:
         int(hour_str),
         int(minute_str),
     )
-
-
