@@ -14,4 +14,7 @@ def is_subscription(expense: Expense, history: list[Expense]) -> bool:
     for expense in same_destination_expenses:
         month_to_expenses_amount[expense.spent_at.month] += 1
 
-    return len(same_destination_expenses) >= 3 and max(month_to_expenses_amount.values()) == 1
+    return (
+        len(same_destination_expenses) >= 3
+        and max(month_to_expenses_amount.values()) == 1
+    )
