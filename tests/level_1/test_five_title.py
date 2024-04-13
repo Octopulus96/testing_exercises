@@ -5,14 +5,12 @@ from functions.level_1.five_title import change_copy_item
 @pytest.mark.parametrize(
     "title,expected",
     [
-        pytest.param(
-            "test_string (100)", "Copy of test_string (100)", id="adding_copy_of"
-        ),
+        pytest.param("test_string (100)", "Copy of test_string (100)", id="adding_copy_of"),
         pytest.param(
             "Copy of test_string(100)",
             "Copy of (101)",
             marks=pytest.mark.xfail(
-                reason="if the name is adjacent to a number in brackets deletes the name",
+                reason="If the name is adjacent to a number in brackets deletes the name",
                 run=True,
             ),
             id="file_name_removed",
@@ -26,7 +24,7 @@ from functions.level_1.five_title import change_copy_item
             "Copy of test string(100)",
             "Copy of test (101)",
             marks=pytest.mark.xfail(
-                reason="deletes the last word in the name if it is contiguous with the number",
+                reason="Deletes the last word in the name if it is contiguous with the number",
                 run=True,
             ),
             id="removed_part_of_the_name",
@@ -56,7 +54,5 @@ from functions.level_1.five_title import change_copy_item
         pytest.param("1" * 92, "1" * 92, id="91_character_name_is_ignored"),
     ],
 )
-def test__change_copy_item__changes_name_and_number_in_the_title(
-    title: str, expected: str
-) -> None:
+def test__change_copy_item__changes_name_and_number_in_the_title(title: str, expected: str) -> None:
     assert change_copy_item(title=title) == expected
