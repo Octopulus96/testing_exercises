@@ -1,5 +1,4 @@
 import pytest
-from typing import Dict
 from functions.level_1.three_url_builder import build_url
 
 
@@ -37,6 +36,6 @@ from functions.level_1.three_url_builder import build_url
     ],
 )
 def test__build_url__generate_a_url_string(
-    base_url: str, path: str, params: Dict[str, str], expected: str
+    base_url: str, path: str, params: dict[str, str], expected: str
 ) -> None:
     assert build_url(base_url, path, params) == expected
