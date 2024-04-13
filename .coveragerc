@@ -1,4 +1,5 @@
 [run]
-branch = True
-source = functions
-omit = __init__.py
+omit = tests/*
+
+[report]
+show_missing = true
