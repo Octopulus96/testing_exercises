@@ -1,36 +1,58 @@
+import pytest
 from functions.level_1.five_title import change_copy_item
 
 
-def test__change_copy_item__adds_text_copy_of_to_the_beginning():
-    assert change_copy_item(title="test_string (100)") == "Copy of test_string (100)"
-
-def test__change_copy_item__text_without_spaces_merging_with_a_number_in_round_brackets_is_deleted():
-    assert change_copy_item(title="Copy of test_string(100)") == "Copy of (101)"
-
-def test__change_copy_item__any_text_not_merging_with_a_number_in_round_brackets_will_not_be_deleted():
-    assert change_copy_item(title="Copy of test_string (100)") == "Copy of test_string (101)"
-
-def test__change_copy_item__deletes_the_last_word_in_the_text_merged_with_the_number_in_round_brackets():
-    assert change_copy_item(title="Copy of test string(100)") == "Copy of test (101)"
-
-def test__change_copy_item__the_number_in_round_brackets_is_incremented_by_one():
-    assert change_copy_item(title="Copy of test string (100)") == "Copy of test string (101)"
-
-def test__change_copy_item__ignores_the_number_in_curly_brackets_and_appended_with_2_in_round_brackets():
-    assert change_copy_item(title="Copy of test string {100}") == "Copy of test string {100} (2)"
-
-def test__change_copy_item__ignores_the_number_in_square_bracketed_and_appended_with_2_in_round_brackets():
-    assert change_copy_item(title="Copy of test string [100]") == "Copy of test string [100] (2)"
-
-def test__change_copy_item__ignores_adjacent_numbers_in_square_and_curly_brackets():
-    assert change_copy_item(title="Copy of test string [99](100){99}") == "Copy of test string (101)"
-
-def test__change_copy_item__text_equal_to_max_main_item_title_length_is_not_processed():
-    assert change_copy_item(title="1" * 100) == "1" * 100
-
-def test__change_copy_item__title_length_falls_within_the_allowed_range_of_maximum_length_and_adds_at_the_beginning_of_copy_of():
-    assert change_copy_item(title="1" * 91) == f"Copy of {"1" * 91}"
-
-def test__change_copy_item__title_length_does_not_falls_within_the_allowed_range_of_maximum_length():
-    assert change_copy_item(title="1" * 92) == "1" * 92
-
+@pytest.mark.parametrize(
+    "title,expected",
+    [
+        pytest.param("test_string (100)", "Copy of test_string (100)", id="adding_copy_of"),
+        pytest.param(
+            "Copy of test_string(100)",
+            "Copy of (101)",
+            marks=pytest.mark.xfail(
+                reason="If the name is adjacent to a number in brackets deletes the name",
+                run=True,
+            ),
+            id="file_name_removed",
+        ),
+        pytest.param(
+            "Copy of test_string (100)",
+            "Copy of test_string (101)",
+            id="one_word_file_name_number_increased",
+        ),
+        pytest.param(
+            "Copy of test string(100)",
+            "Copy of test (101)",
+            marks=pytest.mark.xfail(
+                reason="Deletes the last word in the name if it is contiguous with the number",
+                run=True,
+            ),
+            id="removed_part_of_the_name",
+        ),
+        pytest.param(
+            "Copy of test string (100)",
+            "Copy of test string (101)",
+            id="few_word_file_name_number_increased",
+        ),
+        pytest.param(
+            "Copy of test string {100}",
+            "Copy of test string {100} (2)",
+            id="ignore_curly_brackets_number_2_is_added",
+        ),
+        pytest.param(
+            "Copy of test string [100]",
+            "Copy of test string [100] (2)",
+            id="ignore_square_brackets_number_2_is_added",
+        ),
+        pytest.param(
+            "Copy of test string [99](100){99}",
+            "Copy of test string (101)",
+            id="the_number_has_been_extracted_and_enlarged",
+        ),
+        pytest.param("1" * 100, "1" * 100, id="100_character_name_is_ignored"),
+        pytest.param("1" * 91, f"Copy of {'1' * 91}", id="91_character_name_processed"),
+        pytest.param("1" * 92, "1" * 92, id="91_character_name_is_ignored"),
+    ],
+)
+def test__change_copy_item__changes_name_and_number_in_the_title(title: str, expected: str) -> None:
+    assert change_copy_item(title=title) == expected

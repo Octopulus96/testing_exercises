@@ -6,7 +6,7 @@ def solve_square_equation(
     linear_coefficient: float,
     const_coefficient: float,
 ) -> tuple[float | None, float | None]:
-    discriminant = linear_coefficient ** 2 - 4 * square_coefficient * const_coefficient
+    discriminant = linear_coefficient**2 - 4 * square_coefficient * const_coefficient
 
     if discriminant < 0:
         return None, None
@@ -17,6 +17,10 @@ def solve_square_equation(
         else:
             return None, None
 
-    root_left = (-linear_coefficient - math.sqrt(discriminant)) / (2 * square_coefficient)
-    root_right = (-linear_coefficient + math.sqrt(discriminant)) / (2 * square_coefficient)
+    root_left = (-linear_coefficient - math.sqrt(discriminant)) / (
+        2 * square_coefficient
+    )
+    root_right = (-linear_coefficient + math.sqrt(discriminant)) / (
+        2 * square_coefficient
+    )
     return root_left, root_right

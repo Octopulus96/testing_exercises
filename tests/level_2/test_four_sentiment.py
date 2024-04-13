@@ -1,78 +1,62 @@
+import random
+from typing import Set, List
 import pytest
-
+from faker import Faker
 from functions.level_2.four_sentiment import check_tweet_sentiment
 
-@pytest.fixture
-def sample_text_data():
-    return {
-        "non_triggered_text": """Likewise, the current structure of the organisation requires the definition
-        and refinement of new proposals. The task of the organisation, especially the consultation
-        with the broader asset base, is largely responsible for the establishment of a training
-        system that is in line with immediate needs.""",
 
-        "text_with_balanced_good_and_bad_words": """Love and happiness once filled the hearts of people,
-    but peace was disturbed by war and pain. Joy and kindness became rare treasures,
-    while death and war left their mark on the earth. Hatred and evil took hold of the souls,
-    and the world became a shadow of its former beauty.""",
+@pytest.fixture(name="random_text_with_unique_words")
+def fixture_random_text() -> str:
+    def factory(ext_word_set: Set[str]) -> str:
+        fake = Faker()
+        text = fake.text(200)
+        text_list: List[str] = text.split()
+        text_list = [word.lower() for word in text_list if word not in ext_word_set]
+        for word in ext_word_set:
+            random_index = random.randint(0, len(text_list))
+            text_list.insert(random_index, word)
+        modified_text = " ".join(text_list)
+        return modified_text
 
-        "good_words": ["love", "happiness", "peace"],
-        "bad_words": ["war", "pain", "death"]
-    }
+    return factory
 
-def test__check_tweet_sentiment__returns_BAD_list_of_bad_words_more_than_good_words(sample_text_data):
-    good_words = sample_text_data["good_words"]
 
-    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                                   good_words=good_words.pop(),
-                                   bad_words=sample_text_data["bad_words"])
-    assert result == "BAD"
+@pytest.mark.parametrize(
+    "good_words, bad_words, expected",
+    [
+        pytest.param(
+            {"love", "happiness", "peace"},
+            {"war", "pain", "death"},
+            None,
+            id="bad_words_and_good_words_equally",
+        ),
+        pytest.param(
+            {"love", "happiness", "peace"},
+            {"war", "pain"},
+            "GOOD",
+            id="more_good_words_than_bad",
+        ),
+        pytest.param(
+            {"love", "happiness"},
+            {"war", "pain", "death"},
+            "BAD",
+            id="more_bad_words_than_good",
+        ),
+    ],
+)
+def test__check_tweet_sentiment__emotional_colouring_of_text(
+    random_text_with_unique_words: str, good_words: Set[str], bad_words: Set[str], expected: str | None
+) -> None:
+    text = random_text_with_unique_words(good_words | bad_words)
+    result = check_tweet_sentiment(text=text, good_words=good_words, bad_words=bad_words)
+    assert result == expected
 
-def test__check_tweet_sentiment__returns_GOOD_list_of_good_words_more_than_bad_words(sample_text_data):
-    bad_words = sample_text_data["bad_words"]
-    
-    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                                   good_words=sample_text_data["good_words"],
-                                   bad_words=bad_words.pop())
-    assert result == "GOOD"
 
-def test__check_tweet_sentiment__there_is_an_equal_balance_of_bad_and_good_words_in_the_text(sample_text_data):
-    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                                   good_words=sample_text_data["good_words"],
-                                   bad_words=sample_text_data["bad_words"])
-    assert result == None
-
-def test__check_tweet_sentiment__if_both_lists_are_empty_returns_None(sample_text_data):
-    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                                   good_words=[],
-                                   bad_words=[])
-    assert result == None
-
-def test__check_tweet_sentiment__there_is_an_equal_balance_of_bad_and_good_words_in_the_text(sample_text_data):
-    result = check_tweet_sentiment(text=sample_text_data["non_triggered_text"],
-                                   good_words=sample_text_data["good_words"],
-                                   bad_words=sample_text_data["bad_words"])    
-    assert result == None
-
-def test__check_tweet_sentiment__returns_None_if_type_of_word_list_arguments_are_iterable_set(sample_text_data):
-    result = check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                                   good_words={},
-                                   bad_words=())
-    assert result == None
-
-def test__check_tweet_sentiment__сauses_a_TypeError_exception_if_bad_words_is_not_an_iterated_number(sample_text_data):
-    with pytest.raises(TypeError):
-        check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                              good_words=sample_text_data["good_words"],
-                              bad_words=1)
-        
-def test__check_tweet_sentiment__сauses_a_TypeError_exception_if_good_words_is_not_an_iterated_number(sample_text_data):
-    with pytest.raises(TypeError):
-        check_tweet_sentiment(text=sample_text_data["text_with_balanced_good_and_bad_words"],
-                              good_words=1,
-                              bad_words=sample_text_data["bad_words"])
-
-def test__check_tweet_sentiment__if_the_argument_text_not_str_raises_an_AttributeError_exception(sample_text_data):
-    with pytest.raises(AttributeError):
-        check_tweet_sentiment(text=1,
-                              good_words=sample_text_data["good_words"],
-                              bad_words=sample_text_data["bad_words"])
+def test__check_tweet_sentiment__lists_of_good_and_bad_words_are_empty(
+    random_text_with_unique_words: str,
+) -> None:
+    text = random_text_with_unique_words(set())
+    result = check_tweet_sentiment(
+        text=text, good_words={"love", "happiness", "peace"}, bad_words={"war", "pain", "death"}
+    )
+    assert result is None

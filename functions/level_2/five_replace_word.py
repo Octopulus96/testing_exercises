@@ -8,4 +8,4 @@ def replace_word(text: str, replace_from: str, replace_to: str) -> str:
         else:
             new_words.append(word)
 
-    return ' '.join(new_words)
+    return " ".join(new_words)

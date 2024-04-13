@@ -7,7 +7,10 @@ def fetch_extra_fields_configuration(config_file_path: str) -> Mapping[str, type
     config.read(config_file_path)
     raw_extra_fields_config = fetch_app_config_field(config_file_path, "extra_fields")
     return (
-        {line.split(": ")[0]: eval(line.split(": ")[1]) for line in raw_extra_fields_config.strip().split("\n")}
+        {
+            line.split(": ")[0]: eval(line.split(": ")[1])
+            for line in raw_extra_fields_config.strip().split("\n")
+        }
         if raw_extra_fields_config
         else {}
     )
