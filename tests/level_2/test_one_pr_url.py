@@ -6,9 +6,7 @@ from functions.level_2.one_pr_url import is_github_pull_request_url
 @pytest.mark.parametrize(
     "url, expected",
     [
-        pytest.param(
-            "https://github.com/user/repo/pull/1", True, id="url_is_github_pull_request"
-        ),
+        pytest.param("https://github.com/user/repo/pull/1", True, id="url_is_github_pull_request"),
         pytest.param(
             "https://gitlab.com/user/repo/merge_requests/1",
             False,
@@ -21,5 +19,5 @@ from functions.level_2.one_pr_url import is_github_pull_request_url
         ),
     ],
 )
-def test__is_github_pull_request_url(url: str, expected: bool):
+def test__is_github_pull_request_url__path(url: str, expected: bool) -> None:
     assert is_github_pull_request_url(url=url) == expected
